@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chat jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Routine qui se lance toutes les secondes
+        setInterval(function () {
+          // Récupération de l'affichage de la page affiche.php
+          // et remplacement du contenu de #affiche
+          $.get("affiche.php").done(function (donnees) {
+            $("#affiche").html(donnees);
+          });
+        }, 1000);
+
+        // Lors du clic sur le bouton "Envoyer"
+        $("#envoyer").click(function () {
+          // Génération de l'URL pour l'appel à dire.php
+          var url_dire =
+            "dire.php?pseudo=" +
+            $("#pseudo").val() +
+            "&message=" +
+            $("#message").val();
+
+          // Appel asynchrone à dire.php en utilisant $.ajax
+          $.ajax({
+            url: url_dire,
+          });
+
+          // Vidage du champ de message
+          $("#message").val("");
+        });
+
+        // Lorsqu'une touche est pressée
+        $(window).keydown(function (event) {
+          // Si la touche est "Entrée" (keyCode 13)
+          if (event.keyCode == 13) {
+            // Simulation du clic sur le bouton "Envoyer"
+            $("#envoyer").click();
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="affiche">Chargement des messages...</div>
+    <input type="text" id="pseudo" placeholder="Votre pseudo" />
+    <input type="text" id="message" placeholder="Votre message" />
+    <input type="submit" id="envoyer" value="Envoyer" />
+  </body>
+</html>
