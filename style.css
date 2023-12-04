@@ -1,0 +1,82 @@
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Utilise 100% de la hauteur de la fenêtre */
+}
+
+.container {
+  flex: 1; /* Utilise tout l'espace disponible pour le chat */
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.space-for-cameras {
+  flex: 0; /* Ne prend pas d'espace dans le chat */
+  height: 20vh; /* Utilise 20% de la hauteur de la fenêtre */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#video-container {
+  width: 90%;
+  height: 90%;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.main-content {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  height: 100%; /* Utilise toute la hauteur de .container */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Place le contenu en bas */
+}
+
+#affiche {
+  color: #00ff00; /* Vert pour les pseudos */
+}
+
+.chat-input {
+  margin-top: 20px;
+}
+
+input[type="text"],
+input[type="submit"] {
+  padding: 10px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  color: #fff; /* Couleur du texte blanc pour les champs texte et le bouton */
+}
+
+input[type="text"] {
+  background-color: #444;
+}
+
+input[type="submit"] {
+  background-color: #00ff00;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #009900;
+}
+
+video {
+  width: 450px;
+  height: 50;
+  object-fit: unset;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+  top: 150px;
+}

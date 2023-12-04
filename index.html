@@ -4,50 +4,95 @@
     <meta charset="UTF-8" />
     <title>Chat jQuery</title>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="space-for-cameras">
+        <div id="video-container"></div>
+      </div>
+      <div class="main-content">
+        <div id="affiche">Chargement des messages...</div>
+        <div class="chat-input">
+          <input type="text" id="pseudo" placeholder="Votre pseudo" />
+          <input type="text" id="message" placeholder="Votre message" />
+          <input type="submit" id="envoyer" value="Envoyer" />
+        </div>
+      </div>
+    </div>
+
     <script>
       $(document).ready(function () {
-        // Routine qui se lance toutes les secondes
         setInterval(function () {
-          // Récupération de l'affichage de la page affiche.php
-          // et remplacement du contenu de #affiche
           $.get("affiche.php").done(function (donnees) {
             $("#affiche").html(donnees);
           });
         }, 1000);
 
-        // Lors du clic sur le bouton "Envoyer"
         $("#envoyer").click(function () {
-          // Génération de l'URL pour l'appel à dire.php
-          var url_dire =
-            "dire.php?pseudo=" +
-            $("#pseudo").val() +
-            "&message=" +
-            $("#message").val();
+          var pseudo = $("#pseudo").val();
+          var message = $("#message").val();
 
-          // Appel asynchrone à dire.php en utilisant $.ajax
-          $.ajax({
-            url: url_dire,
-          });
+          if (pseudo.trim() !== "" && message.trim() !== "") {
+            $.ajax({
+              url: "dire.php",
+              type: "GET",
+              data: {
+                chat_pseudo: pseudo,
+                chat_message: message,
+              },
+              success: function (response) {
+                // Retirez ou commentez la ligne suivante pour éviter l'alerte
+                // alert(response);
+              },
+            });
 
-          // Vidage du champ de message
-          $("#message").val("");
+            $("#pseudo").val("");
+            $("#message").val("");
+          } else {
+            alert("Veuillez saisir un pseudo et un message.");
+          }
         });
 
-        // Lorsqu'une touche est pressée
         $(window).keydown(function (event) {
-          // Si la touche est "Entrée" (keyCode 13)
           if (event.keyCode == 13) {
-            // Simulation du clic sur le bouton "Envoyer"
             $("#envoyer").click();
           }
         });
       });
     </script>
-  </head>
-  <body>
-    <div id="affiche">Chargement des messages...</div>
-    <input type="text" id="pseudo" placeholder="Votre pseudo" />
-    <input type="text" id="message" placeholder="Votre message" />
-    <input type="submit" id="envoyer" value="Envoyer" />
+
+    <script>
+      $(document).ready(function () {
+        const videoElement = document.createElement("video");
+        videoElement.autoplay = true;
+
+        navigator.mediaDevices
+          .getUserMedia({ video: true })
+          .then((stream) => {
+            videoElement.srcObject = stream;
+            document
+              .querySelector("#video-container")
+              .appendChild(videoElement);
+          })
+          .catch((error) => {
+            console.error("Erreur lors de l'accès à la caméra:", error);
+          });
+
+        $("#demande-camera").click(function () {
+          navigator.mediaDevices
+            .getUserMedia({ video: true })
+            .then((stream) => {
+              videoElement.srcObject = stream;
+              document
+                .querySelector("#video-container")
+                .appendChild(videoElement);
+            })
+            .catch((error) => {
+              console.error("Erreur lors de l'accès à la caméra:", error);
+            });
+        });
+      });
+    </script>
   </body>
 </html>
