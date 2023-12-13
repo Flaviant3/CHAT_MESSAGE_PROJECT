@@ -17,6 +17,14 @@
           <input type="text" id="pseudo" placeholder="Votre pseudo" />
           <input type="text" id="message" placeholder="Votre message" />
           <input type="submit" id="envoyer" value="Envoyer" />
+          <button id="emoji-button">😊</button>
+          <ul id="emoji-list">
+            <!-- Ajoutez ici vos emojis personnalisés -->
+            <li onclick="addEmoji('❤️')">❤️</li>
+            <!-- Ajoutez autant d'emojis que nécessaire -->
+          </ul>
+          <input type="file" id="image-input" />
+          <button id="send-image">Envoyer une image</button>
         </div>
       </div>
     </div>
@@ -29,11 +37,37 @@
           });
         }, 1000);
 
+        function parseMessage(message) {
+          // Check for the "wizz" tag
+          if (message.toLowerCase().includes("wizz")) {
+            // Add the shake class to the message container
+            $("#affiche").addClass("shake");
+
+            // Remove the shake class after 1 second
+            setTimeout(function () {
+              $("#affiche").removeClass("shake");
+            }, 1000);
+
+            // For demonstration purposes, log a message to the console
+            console.log("Wizz detected!");
+          }
+
+          // Check for the "BOOM" tag
+          if (message.toUpperCase() === "BOOM") {
+            // Play explosion sound
+            var explosionAudio = new Audio("explosion.mp3");
+            explosionAudio.play();
+          }
+        }
+
         $("#envoyer").click(function () {
           var pseudo = $("#pseudo").val();
           var message = $("#message").val();
 
           if (pseudo.trim() !== "" && message.trim() !== "") {
+            // Parse the message for special tags
+            parseMessage(message);
+
             $.ajax({
               url: "dire.php",
               type: "GET",
@@ -59,11 +93,45 @@
             $("#envoyer").click();
           }
         });
-      });
-    </script>
 
-    <script>
-      $(document).ready(function () {
+        $("#send-image").click(function () {
+          console.log("Bouton Envoyer une image cliqué");
+
+          var input = document.getElementById("image-input");
+          var file = input.files[0];
+          console.log("Fichier sélectionné:", file);
+
+          // Utilisez AJAX pour envoyer le fichier au serveur
+          var formData = new FormData();
+          formData.append("image", file);
+
+          $.ajax({
+            url: "upload.php", // Créez un fichier upload.php pour gérer l'envoi
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+              // Traitez la réponse du serveur, si nécessaire
+              console.log(response);
+            },
+          });
+        });
+
+        // Fonction pour ajouter un emoji au champ de message
+        window.addEmoji = function (emoji) {
+          var currentMessage = $("#message").val();
+          $("#message").val(currentMessage + emoji);
+
+          // Masque la liste d'emojis après l'ajout
+          $("#emoji-list").hide();
+        };
+
+        // Affiche ou masque la liste d'emojis lors du clic sur le bouton emoji
+        $("#emoji-button").click(function () {
+          $("#emoji-list").toggle();
+        });
+
         const videoElement = document.createElement("video");
         videoElement.autoplay = true;
 
